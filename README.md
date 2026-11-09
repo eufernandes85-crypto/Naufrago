@@ -1,0 +1,2 @@
+# Naufrago
+Game automático 
