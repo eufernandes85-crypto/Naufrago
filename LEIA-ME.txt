@@ -1,0 +1,38 @@
+NÁUFRAGO IA - versão com API de IA (Claude, ChatGPT ou Gemini)
+
+COMO FUNCIONA
+O jogo (index.html) pede as decisões da IA para uma função no servidor (netlify/functions/ai.js).
+Só essa função conhece sua chave de API. A chave NUNCA fica no navegador.
+Se a função não existir ou estiver sem chave, o jogo roda só com o instinto básico.
+
+PASSO A PASSO (recomendado: GitHub + Netlify)
+1. Crie um repositório no GitHub e envie TODO o conteúdo desta pasta
+   (index.html, netlify.toml e a pasta netlify).
+2. No Netlify: Add new site > Import an existing project > escolha o repositório.
+   Não precisa configurar build. Clique em Deploy.
+3. No Netlify, abra Site configuration > Environment variables e crie:
+     AI_PROVIDER   = anthropic   (ou openai, ou gemini)
+     ANTHROPIC_API_KEY = sua chave       (se AI_PROVIDER=anthropic)
+     OPENAI_API_KEY    = sua chave       (se AI_PROVIDER=openai)
+     GEMINI_API_KEY    = sua chave       (se AI_PROVIDER=gemini)
+4. Faça um novo deploy (Deploys > Trigger deploy) para as variáveis valerem.
+5. Abra o site. No topo deve aparecer "IA ativa". Se aparecer "instinto", a função
+   não respondeu: veja Logs > Functions no Netlify.
+
+Alternativa sem GitHub: instale o Netlify CLI (npm i -g netlify-cli), entre nesta pasta
+e rode: netlify deploy --prod
+(Arrastar a pasta no Netlify Drop pode não publicar a função.)
+
+VARIÁVEIS OPCIONAIS
+  AI_MODEL        nome do modelo. Padrões: anthropic=claude-sonnet-5-5, openai=gpt-4o-mini,
+                  gemini=gemini-2.0-flash. Os nomes mudam com o tempo: confira na documentação
+                  do provedor e ajuste aqui se der erro de modelo.
+                  Para gastar menos com Claude, use claude-haiku-5-5.
+  RATE_PER_MIN    limite de chamadas por pessoa por minuto (padrão 30)
+  ALLOWED_ORIGIN  endereço do seu site (ex.: https://meujogo.netlify.app) para recusar outros sites
+
+CUIDADOS COM CUSTO E SEGURANÇA
+- Todo mundo que abrir o seu site gasta a SUA chave. Cada partida faz várias chamadas por minuto.
+- Defina um limite de gasto mensal no painel do provedor (Anthropic, OpenAI ou Google).
+- Use ALLOWED_ORIGIN e RATE_PER_MIN para reduzir abuso.
+- Nunca coloque a chave dentro do index.html nem envie ela para o GitHub.
